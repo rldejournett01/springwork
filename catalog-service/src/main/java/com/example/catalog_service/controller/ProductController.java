@@ -1,6 +1,8 @@
-package com.example.catalog_service;
+package com.example.catalog_service.controller;
 
 
+import com.example.catalog_service.model.Product;
+import com.example.catalog_service.repository.ProductRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
