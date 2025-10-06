@@ -8,13 +8,14 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class ProductService {
     private final ProductRepository repo;
 
     public  ProductService(ProductRepository repo) {
         this.repo = repo;
     }
-
+//Service methods
     //Get all products
     public List<Product> getAllProducts() {
         return repo.findAll();
