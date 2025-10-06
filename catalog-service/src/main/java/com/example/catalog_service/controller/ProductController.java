@@ -4,8 +4,10 @@ package com.example.catalog_service.controller;
 import com.example.catalog_service.model.Product;
 import com.example.catalog_service.repository.ProductRepository;
 import com.example.catalog_service.service.ProductService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -33,13 +35,13 @@ public class ProductController {
     //Create new product
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Product create(@RequestBody Product product) {
+    public Product create(@RequestBody @Valid Product product, BindingResult bindingResult) {
         return service.createProduct(product);
     }
 
     //Update existing product by ID
     @PutMapping("/{id}")
-    public ResponseEntity<Product> update(@PathVariable Long id, @RequestBody Product product) {
+    public ResponseEntity<Product> update(@PathVariable Long id, @RequestBody @Valid Product product, BindingResult bindingResult) {
         return service.updateProduct(id, product)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
