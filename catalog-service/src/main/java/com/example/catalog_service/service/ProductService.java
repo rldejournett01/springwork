@@ -1,6 +1,7 @@
 package com.example.catalog_service.service;
 
 
+import com.example.catalog_service.exception.ProductNotFoundException;
 import com.example.catalog_service.repository.ProductRepository;
 import com.example.catalog_service.model.Product;
 import org.springframework.stereotype.Service;
@@ -22,8 +23,9 @@ public class ProductService {
     }
 
     //Get a product by ID
-    public Optional<Product> getProductById(Long id) {
-        return repo.findById(id);
+    public Product getProductById(Long id) {
+        return repo.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException(id));
     }
 
     //Create a new product
@@ -32,22 +34,21 @@ public class ProductService {
     }
 
     //Update an existing product
-    public Optional<Product> updateProduct(Long id, Product updateProduct) {
-        return repo.findById(id).map(existing -> {
-            existing.setName(updateProduct.getName());
-            existing.setDescription(updateProduct.getDescription());
-            existing.setPrice(updateProduct.getPrice());
-            existing.setStock(updateProduct.getStock());
-            return repo.save(existing);
-        });
+    public Product updateProduct(Long id, Product updateProduct) {
+        Product existing = repo.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException(id));
+        existing.setName(updateProduct.getName());
+        existing.setDescription(updateProduct.getDescription());
+        existing.setPrice(updateProduct.getPrice());
+        existing.setStock(updateProduct.getStock());
+        return repo.save(existing);
     }
 
     //Delete a product
-    public boolean deleteProduct(Long id){
+    public void deleteProduct(Long id){
         if (!repo.existsById(id)) {
-            return false;
+            throw new ProductNotFoundException(id);
         }
         repo.deleteById(id);
-        return true;
     }
 }

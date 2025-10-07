@@ -26,32 +26,30 @@ public class ProductController {
         return service.getAllProducts();
     }
     //Get one product by ID
+
     @GetMapping("/{id}")
     public ResponseEntity<Product> get(@PathVariable Long id) {
-        return service.getProductById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        Product product = service.getProductById(id);
+        return ResponseEntity.ok(product);
     }
     //Create new product
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public Product create(@RequestBody @Valid Product product, BindingResult bindingResult) {
-        return service.createProduct(product);
+    public ResponseEntity<Product> create(@RequestBody @Valid Product product, BindingResult bindingResult) {
+        Product created = service.createProduct(product);
+        return new ResponseEntity<>(created,HttpStatus.CREATED);
     }
 
     //Update existing product by ID
     @PutMapping("/{id}")
     public ResponseEntity<Product> update(@PathVariable Long id, @RequestBody @Valid Product product, BindingResult bindingResult) {
-        return service.updateProduct(id, product)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        Product updated = service.updateProduct(id, product);
+        return  ResponseEntity.ok(updated);
     }
     //Delete product by ID
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        boolean deleted = service.deleteProduct(id);
-        return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+        service.deleteProduct(id);
+        return ResponseEntity.noContent().build();
     }
 
 }
